@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt_BR" class="fabriciotav">
+<head>
+  <meta charset="utf-8">
+  <title>Partidas BHTrans</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="Fabrício Tavares">
+
+  <link rel="stylesheet" href="../css/bootstrap-grid.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>text{font-size:10px;font-weight:bold;fill:#787878}.linha{display:inline-block;width:40px;padding:4px;margin:1px;font-size:10px;font-weight:normal;color:#fff;text-align:center;cursor:pointer;background-color:#fff;border:1px solid #ccc;border-radius:2px}.linha-SUPLEMENTAR{color:#141414;background-color:#ffe982;border-color:#c4b364}.linha-COLETIVO{background-color:#4682b4;border-color:#325d81}.SUPLEMENTAR{fill:#4682b4}.COLETIVO{fill:#4682b4}.horas-selected-lines{opacity:.2}.legenda-linha{position:relative;top:2px;display:inline-block;width:14px;height:14px;border:1px solid;border-radius:2px}.legenda-linha-coletivo{background-color:#4682b4;border-color:#325d81}.legenda-linha-suplementar{background-color:#ffe982;border-color:#c4b364}.legenda-linha-p{padding-bottom:5px;font-size:12px;font-weight:normal}.legenda-horario{font-size:10px;fill:#fff;text-anchor:middle}.legenda .legenda-linha-p{margin:5px 4px 0 5px}.horas{fill:#e2e2e2}.tooltip{position:absolute;z-index:100;padding:4px 6px;font-size:12px;font-weight:bold;color:#505050;background-color:#fff;border-radius:3px;visibility:hidden}.selected{font-weight:bold;color:#505050;background-color:#fff}#input-line{display:inline-block;float:right!important;width:100px;padding:2px 4px;margin:4px 10px;font-size:11px;text-align:center;border:1px solid #cbcbcb;border-radius:10px}</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 col-sm-12">
+      <header>Por <a href="http://fabriciotav.org/about.html">Fabrício Tavares</a></header>
+      <h1>Partidas Ônibus BHTrans</h1>
+      <p>Número de partidas dos ônibus que circulam em Belo Horizonte, com a média de partidas por hora, em cada tipo de dia. Selecione uma linha de ônibus para fazer comparações com a média total.</p>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div id="quadro" class="col-md-6 col-sm-6"></div>
+    <div id="linhas" class="col-md-6 col-sm-6">
+      <div class="clearfix">
+        <span class="legenda-linha legenda-linha-coletivo"></span> <span class="legenda-linha-p">Ônibus Coletivo</span>
+        <span class="legenda-linha legenda-linha-suplementar"></span> <span class="legenda-linha-p">Ônibus Suplementar</span>
+        <input id="input-line" type="text" placeholder="Linha de ônibus" value="">
+      </div>
+      <div id="selecao-linhas"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 col-sm-12">
+      <footer>Fonte: <a href="http://www.bhtrans.pbh.gov.br/portal/page/portal/portalpublico/Temas/Onibus/lista-txt-onibus">BHTrans</a></footer>
+    </div>
+  </div>
+</div>
+
+  <script src="d3.v3.min.js"></script>
+  <script>var tooltip=d3.select("body").append("div").attr("class","tooltip");d3.tsv("bhtrans_publico/BHTRANS_QH.TXT",function(data){data.forEach(function(d){if(d.DES_TIPO_DIA==="DOMINGO"||d.DES_TIPO_DIA==="FERIADO"){d.DES_TIPO_DIA="DOMINGO E FERIADO"}});var dataLinhas=d3.nest().key(function(d){return d.COD_LINH}).key(function(d){return d.TIP_TRAN}).key(function(d){return d.DES_TIPO_DIA}).key(function(d){return d.HOR_SAID_VIAG}).rollup(function(d){return d.length}).entries(data);var nLinhas=dataLinhas.length;d3.select("#input-line").on("keyup",function(d){var typedLine=d3.select(this).property("value");if(d3.select(".ln-"+typedLine)[0][0]){d3.selectAll(".selected").classed("selected",false);d3.select(".ln-"+typedLine).classed("selected",true);var notFound=true;var i=0;while(notFound){if(dataLinhas[i].key===typedLine){console.log("achou",dataLinhas[i]);notFound=false;update(dataLinhas[i])}i++}}});d3.select("#selecao-linhas").selectAll(".linha").data(dataLinhas).enter().append("span").attr("class",function(d){return"linha linha-"+d.values[0].key+" "+"ln-"+d.key}).text(function(d){return d.key}).on("click",function(d){d3.selectAll(".selected").classed("selected",false);d3.select(this).classed("selected",true);d3.select("#input-line").property("value",d.key);update(d)});var dataset=d3.nest().key(function(d){return d.DES_TIPO_DIA}).key(function(d){return d.HOR_SAID_VIAG}).rollup(function(d){return d.length/nLinhas}).entries(data);var a=[];dataset.forEach(function(d){a.push(d3.max(d.values,function(d1){return d1.values}))});var aMax=d3.max(a);var horarios=["5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","0","1","2","3","4"];var x=d3.scale.ordinal().domain(horarios).rangeBands([0,432]);var y=d3.scale.linear().domain([0,aMax]).range([0,56]);var svg=d3.select("#quadro").append("svg").attr("width",460).attr("height",680).append("g").attr("transform","translate(20, 20)");var dias=svg.selectAll(".g-dias").data(dataset).enter().append("g").attr("class",function(d){var c=dasherize(d.key);return"g-dias "+c}).attr("transform",function(d,i){return"translate(0, "+(80*i+10)+")"});dias.append("rect").attr("x",0).attr("y",0).attr("width",500).attr("height",80).style("fill","white");var horas=dias.selectAll(".horas").data(function(d){return d.values});horas.enter().append("rect").attr("class","horas").attr("x",function(d){return x(d.key)}).attr("y",function(d){return 68-y(d.values)}).attr("width",17).attr("height",function(d){return y(d.values)}).on("mouseover",function(d){return tooltip.style("visibility","visible").text("Média total → "+d3.round(d.values,1)+" partidas")}).on("mousemove",function(){return tooltip.style("top",d3.event.pageY-10+"px").style("left",d3.event.pageX+10+"px")}).on("mouseout",function(){return tooltip.style("visibility","hidden")});dias.append("text").attr("class","legenda").attr("x",0).attr("y",80).text(function(d){return d.key});dias.selectAll(".legenda-horario").data(horarios).enter().append("text").attr("class","legenda-horario").attr("x",function(d){return x(d)+8}).attr("y",65).text(function(d){return d});function update(line){var updateData=line.values[0].values;var au=[];updateData.forEach(function(d){au.push(d3.max(d.values,function(d1){return d1.values}))});var auMax=d3.max(au);if(auMax>aMax){y=d3.scale.linear().domain([0,auMax]).range([0,56])}else{y=d3.scale.linear().domain([0,aMax]).range([0,56])}horas.transition().duration(750).attr("y",function(d){return 68-y(d.values)}).attr("height",function(d){return y(d.values)});d3.selectAll(".horas-selected-lines").data([]).exit().remove();updateData.forEach(function(dd){var g=d3.select("."+dasherize(dd.key));var l=g.selectAll(".horas-selected-lines").data(dd.values);l.enter().append("rect").attr("class","horas-selected-lines "+line.values[0].key);l.attr("x",function(d){return x(d.key)}).attr("width",17).on("mouseover",function(d){return tooltip.style("visibility","visible").text("Linha "+line.key+" → "+d.values+" partidas")}).on("mousemove",function(){return tooltip.style("top",d3.event.pageY-10+"px").style("left",d3.event.pageX+10+"px")}).on("mouseout",function(){return tooltip.style("visibility","hidden")});l.transition().duration(750).attr("y",function(d){return 68-y(d.values)}).attr("height",function(d){return y(d.values)});l.exit().remove();dias.selectAll(".legenda-horario").remove();dias.selectAll(".legenda-horario").data(horarios).enter().append("text").attr("class","legenda-horario").attr("x",function(d){return x(d)+8}).attr("y",65).text(function(d){return d})})}function dasherize(word){var regex=/[ _]/g;return word.replace(regex,"-")}});</script>
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38545086-1']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+  </script>
+</body>
+</html>

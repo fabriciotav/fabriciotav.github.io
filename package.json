@@ -1,0 +1,19 @@
+{
+  "name": "fabriciotav",
+  "preferGlobal": false,
+  "homepage": "http://fabriciotav.org",
+  "author": "Fabrício Tavares <f@fabriciotav.org",
+  "descripiton": "Code, data and design.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fabriciotav/fabriciotav.github.io.git"
+  },
+  "devDependencies": {
+    "less": "latest",
+    "recess": "latest",
+    "uglify-js": "latest"
+  },
+  "engines": {
+    "node": ">=0.10.15"
+  }
+}

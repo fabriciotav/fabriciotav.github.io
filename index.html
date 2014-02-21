@@ -1,0 +1,37 @@
+---
+layout: default
+title: Fabrício Tavares
+---
+
+<div class="row">
+  <div class="span12">
+    <h1 class="home">
+      <a href="/">Fabrício Tavares</a>
+    </h1>
+
+    <h1 class="section">Posts</h1>
+    <ul>
+      {% for post in site.categories.blog %}
+      <li><span>{{ post.date | date_to_string }} &raquo;</span> <a href="{{ post.url }}">{{ post.title }}</a></li>
+      {% endfor %}
+    </ul>
+
+    <h1 class="section">Snippets</h1>
+    <ul>
+      {% for post in site.categories.snippets %}
+      <li><span>{{ post.date | date_to_string }} &raquo;</span> <a href="{{ post.url }}">{{ post.title }}</a></li>
+      {% endfor %}
+    </ul>
+
+    <h1 class="section">Lab</h1>
+    <ul>
+      <li><a target="_blank" href="/protestosbr/">Protestos pelo Brasil:</a> Vídeos sem cortes das manifestações ocorridas em junho/2013.</li>
+    </ul>
+
+    <h1 class="section">Open Source</h1>
+    <ul lang="en">
+      <li><a target="_blank" href="http://github.com/celula">celula.in:</a> Small groups management in a easy, practical and free way.</li>
+      <li><a target="_blank" href="https://github.com/fabriciotav/ember-snippets-for-sublime-text-2">Snippets:</a> Ember.js snippets for Sublime Text 2</li>
+    </ul>
+  </div>
+</div>

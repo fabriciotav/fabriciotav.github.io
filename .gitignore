@@ -1,1 +1,12 @@
-_site/
+.DS_Store
+_site
+node_modules
+src
+Makefile
+
+# Lab
+protestosbr/*
+!index.html
+!data
+!ico
+!img

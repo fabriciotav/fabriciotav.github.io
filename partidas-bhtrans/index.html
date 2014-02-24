@@ -9,7 +9,7 @@
 
   <link rel="stylesheet" href="../css/bootstrap-grid.css">
   <link rel="stylesheet" href="../css/style.css">
-  <style>text{font-size:10px;font-weight:bold;fill:#787878}line,path{shape-rendering:crispEdges}h2{margin:0}.linha{display:inline-block;width:40px;padding:4px;margin:1px;font-size:10px;font-weight:normal;color:#fff;text-align:center;cursor:pointer;background-color:#fff;border:1px solid #ccc;border-radius:2px}.linha-SUPLEMENTAR{color:#141414;background-color:#ffe982;border-color:#c4b364}.linha-COLETIVO{background-color:#4682b4;border-color:#325d81}.SUPLEMENTAR{fill:#4682b4}.COLETIVO{fill:#4682b4}.legenda-linha{position:relative;top:2px;display:inline-block;width:14px;height:14px;border:1px solid;border-radius:2px}.legenda-linha-coletivo{background-color:#4682b4;border-color:#325d81}.legenda-linha-suplementar{background-color:#ffe982;border-color:#c4b364}.legenda-linha-p{padding-bottom:5px;font-size:12px;font-weight:normal}.legenda-horario{font-size:10px;fill:#fff;text-anchor:middle}.legenda .legenda-linha-p{margin:5px 4px 0 5px}.horas{fill:#e2e2e2}.tooltip{position:absolute;z-index:100;padding:4px 6px;font-size:12px;font-weight:bold;color:#505050;background-color:#fff;border-radius:3px;visibility:hidden}.selected{font-weight:bold;color:#505050;background-color:#fff}#input-line{display:inline-block;float:right!important;width:100px;padding:2px 4px;margin:4px 10px;font-size:11px;text-align:center;border:1px solid #cbcbcb;border-radius:10px}.line-elevator{stroke:#828282;stroke-width:1px;fill:none;stroke-linejoin:round}.horas-selected-lines{stroke:#828282;stroke-width:2px}.departures-with-lift{fill:#828282}.departures-gap{stroke:#828282;stroke-width:2px;stroke-dasharray:2,2;shape-rendering:crispEdges}</style>
+  <style>text{font-size:10px;font-weight:bold;fill:#787878}line,path{shape-rendering:crispEdges}h2{margin:0}.linha{display:inline-block;width:40px;padding:4px;margin:1px;font-size:10px;font-weight:normal;color:#fff;text-align:center;cursor:pointer;background-color:#fff;border:1px solid #ccc;border-radius:2px}.linha-SUPLEMENTAR{color:#141414;background-color:#ffe982;border-color:#c4b364}.linha-COLETIVO{background-color:#4682b4;border-color:#325d81}.SUPLEMENTAR{fill:#4682b4}.COLETIVO{fill:#4682b4}.legenda-linha{position:relative;top:2px;display:inline-block;width:14px;height:14px;border:1px solid;border-radius:2px}.legenda-linha-coletivo{background-color:#4682b4;border-color:#325d81}.legenda-linha-suplementar{background-color:#ffe982;border-color:#c4b364}.legenda-linha-p{padding-bottom:5px;font-size:12px;font-weight:normal}.legenda-horario{font-size:10px;fill:#fff;text-anchor:middle}.legenda .legenda-linha-p{margin:5px 4px 0 5px}.horas{fill:#e2e2e2}.tooltip{position:absolute;z-index:100;padding:4px 6px;font-size:12px;font-weight:bold;color:#505050;background-color:#fff;border-radius:3px;visibility:hidden}.selected{font-weight:bold;color:#505050;background-color:#fff}#input-line{display:inline-block;float:right!important;width:100px;padding:2px 4px;margin:4px 10px;font-size:11px;text-align:center;border:1px solid #cbcbcb;border-radius:10px}.line-elevator{stroke:#828282;stroke-width:1px;fill:none;stroke-linejoin:round}.horas-selected-lines{stroke:#828282;stroke-width:2px}.departures-with-lift{fill:#828282}.departures-gap{stroke:#828282;stroke-width:2px;stroke-dasharray:2,2;shape-rendering:crispEdges}#label text{font-size:10px;font-weight:normal;fill:#505050}#label .hour{font-weight:bold!important;fill:#fff;text-anchor:middle}#label rect{fill:#e2e2e2}#label line{stroke:#828282;stroke-width:2px;shape-rendering:crispEdges}#label .label-departures-gap{stroke-dasharray:2,2}#label circle{fill:#828282}</style>
 </head>
 <body>
 
@@ -26,7 +26,18 @@
     <div class="col-md-6 col-sm-6">
       <div id="legenda-quadro">
         <h2>Legenda</h2>
-        <img src="label@2x.png" alt="Legenda" style="width: 220px; height: 54px;">
+        <svg id="label" width="220" height="60">
+          <rect width="17" height="50" x="110" y="30"></rect>
+          <circle r="2" cx="119" cy="10"></circle>
+          <line x1="110" x2="127" y1="45" y2="45"></line>
+          <line class="label-departures-gap" x1="119" x2="119" y1="10" y2="45"></line>
+          
+          <text x="103" y="35" text-anchor="end">Média total de partidas</text>
+          <text x="103" y="57" text-anchor="end">Hora do dia</text>
+          <text x="133" y="12" text-anchor="start">Partidas da linha</text>
+          <text x="133" y="47" text-anchor="start">Partidas c/ elevador</text>
+          <text class="hour" x="119" y="57">16</text>
+        </svg>
       </div>
       <div id="quadro"></div>
     </div>
